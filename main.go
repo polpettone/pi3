@@ -2,12 +2,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/fatih/color"
-	"github.com/inancgumus/screen"
 	"go.i3wm.org/i3/v4"
 	"log"
 	"sort"
-	"time"
 )
 
 type Overview struct {
@@ -33,7 +30,9 @@ func (overview Overview) printFormatted() {
 			fmt.Printf("- %s \n", w.Name)
 			for _, p := range w.Programs {
 				if p.Focused {
-					color.Blue("  %s ", p.Name)
+					fmt.Printf("  %s \n", "-----------------")
+					fmt.Printf("  %s \n", p.Name)
+					fmt.Printf("  %s \n", "-----------------")
 				} else {
 					fmt.Printf("  %s \n", p.Name)
 				}
@@ -94,11 +93,5 @@ func collect() {
 }
 
 func main() {
-	screen.Clear()
-	for {
-		screen.MoveTopLeft()
-		collect()
-		time.Sleep(1000 * time.Millisecond)
-	}
-
+	collect()
 }
