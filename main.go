@@ -2,16 +2,19 @@ package main
 
 import (
 	"fmt"
+	"github.com/fatih/color"
+	"github.com/inancgumus/screen"
 	"go.i3wm.org/i3/v4"
 	"log"
 	"sort"
+	"time"
 )
 
 type Overview struct {
 	WorkspaceOverviews []WorkspaceOverview
 }
 
-func (overview Overview) format() string {
+func (overview Overview) printFormatted() {
 	m := make(map[string][]WorkspaceOverview)
 
 	for _, w := range overview.WorkspaceOverviews {
@@ -23,28 +26,37 @@ func (overview Overview) format() string {
 		keys = append(keys, k)
 	}
 	sort.Strings(keys)
-	var output string
 	for _, k := range keys {
-		output += fmt.Sprintf("%s \n", k)
+		fmt.Printf("%s \n", k)
 		for _, w := range m[k] {
-			output += "\n"
-			output += fmt.Sprintf("- %s \n", w.Name)
+			fmt.Printf("\n")
+			fmt.Printf("- %s \n", w.Name)
 			for _, p := range w.Programs {
-				output += fmt.Sprintf("  %s \n", p)
+				if p.Focused {
+					color.Blue("  %s ", p.Name)
+				} else {
+					fmt.Printf("  %s \n", p.Name)
+				}
+
 			}
 		}
-		output += "\n"
+		fmt.Printf("\n")
 	}
-	return output
 }
 
 type WorkspaceOverview struct {
 	Screen   string
 	Name     string
-	Programs []string
+	Programs []Program
 }
 
-func main() {
+type Program struct {
+	Name    string
+	Focused bool
+}
+
+func collect() {
+
 	tree, err := i3.GetTree()
 	if err != nil {
 		log.Fatal(err)
@@ -67,7 +79,8 @@ func main() {
 		}
 
 		for _, sn := range found.Nodes {
-			wo.Programs = append(wo.Programs, sn.Name)
+			program := Program{Name: sn.Name, Focused: sn.Focused}
+			wo.Programs = append(wo.Programs, program)
 		}
 
 		workspaceOverviews = append(workspaceOverviews, wo)
@@ -77,6 +90,15 @@ func main() {
 		WorkspaceOverviews: workspaceOverviews,
 	}
 
-	fmt.Printf("%s", overview.format())
+	overview.printFormatted()
+}
+
+func main() {
+	screen.Clear()
+	for {
+		screen.MoveTopLeft()
+		collect()
+		time.Sleep(1000 * time.Millisecond)
+	}
 
 }
