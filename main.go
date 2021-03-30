@@ -27,8 +27,13 @@ func (overview Overview) format() string {
 	for _, k := range keys {
 		output += fmt.Sprintf("%s \n", k)
 		for _, w := range m[k] {
-			output += fmt.Sprintf("-- %s %s \n", w.Name, w.Programs)
+			output += "\n"
+			output += fmt.Sprintf("- %s \n", w.Name)
+			for _, p := range w.Programs {
+				output += fmt.Sprintf("  %s \n", p)
+			}
 		}
+		output += "\n"
 	}
 	return output
 }
