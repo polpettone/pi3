@@ -54,6 +54,14 @@ type Program struct {
 	Focused bool
 }
 
+func NewProgram(name string, focused bool) Program {
+	programName := "vim (probably}"
+	if name != "" {
+		programName = name
+	}
+	return Program{Name: programName, Focused: focused}
+}
+
 func collect() {
 
 	tree, err := i3.GetTree()
@@ -78,7 +86,7 @@ func collect() {
 		}
 
 		for _, sn := range found.Nodes {
-			program := Program{Name: sn.Name, Focused: sn.Focused}
+			program := NewProgram(sn.Name, sn.Focused)
 			wo.Programs = append(wo.Programs, program)
 		}
 
