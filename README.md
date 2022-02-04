@@ -12,3 +12,6 @@ Tool for i3 (window manager) overview of workspaces, running applications and di
 ## Running
     pi3 or watch pi3
     
+
+## Known Issues
+    Horizontal Split not recognized. 

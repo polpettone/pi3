@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	"go.i3wm.org/i3/v4"
 	"log"
 	"sort"
+
+	"go.i3wm.org/i3/v4"
 )
 
 type Overview struct {
@@ -31,12 +32,11 @@ func (overview Overview) printFormatted() {
 			for _, p := range w.Programs {
 				if p.Focused {
 					fmt.Printf("  %s \n", "-----------------")
-					fmt.Printf("  %s \n", p.Name)
+					fmt.Printf("  %s : %s \n", p.Title, p.Instance)
 					fmt.Printf("  %s \n", "-----------------")
 				} else {
-					fmt.Printf("  %s \n", p.Name)
+					fmt.Printf("  %s : %s \n", p.Title, p.Instance)
 				}
-
 			}
 		}
 		fmt.Printf("\n")
@@ -50,16 +50,10 @@ type WorkspaceOverview struct {
 }
 
 type Program struct {
-	Name    string
-	Focused bool
-}
-
-func NewProgram(name string, focused bool) Program {
-	programName := "vim (probably}"
-	if name != "" {
-		programName = name
-	}
-	return Program{Name: programName, Focused: focused}
+	Name     string
+	Instance string
+	Title    string
+	Focused  bool
 }
 
 func collect() {
@@ -80,14 +74,25 @@ func collect() {
 		found := tree.Root.FindChild(func(n *i3.Node) bool {
 			return int64(n.ID) == int64(w.ID)
 		})
+
 		wo := WorkspaceOverview{
 			Screen: w.Output,
 			Name:   w.Name,
 		}
 
+		//TODO: walk down the tree
 		for _, sn := range found.Nodes {
-			program := NewProgram(sn.Name, sn.Focused)
-			wo.Programs = append(wo.Programs, program)
+			if len(sn.Nodes) == 0 {
+				program := Program{
+					sn.Name,
+					sn.WindowProperties.Instance,
+					sn.WindowProperties.Title,
+					sn.Focused,
+				}
+				wo.Programs = append(wo.Programs, program)
+			} else {
+
+			}
 		}
 
 		workspaceOverviews = append(workspaceOverviews, wo)

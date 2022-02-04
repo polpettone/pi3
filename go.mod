@@ -1,10 +1,14 @@
 module github.com/polpettone/pi3
 
-go 1.16
+go 1.17
 
 require (
-	github.com/fatih/color v1.10.0
-	github.com/inancgumus/screen v0.0.0-20190314163918-06e984b86ed3
+	github.com/buger/goterm v1.0.3
 	go.i3wm.org/i3/v4 v4.18.0
-	golang.org/x/crypto v0.0.0-20210322153248-0c34fe9e7dc2 // indirect
+)
+
+require (
+	github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802 // indirect
+	github.com/BurntSushi/xgbutil v0.0.0-20160919175755-f7c97cef3b4e // indirect
+	golang.org/x/sys v0.0.0-20210331175145-43e1dd70ce54 // indirect
 )
