@@ -105,6 +105,36 @@ func collect() {
 	overview.printFormatted()
 }
 
+func printI3Tree() {
+	tree, err := i3.GetTree()
+	if err != nil {
+		log.Fatal(err)
+	}
+	printNode(tree.Root)
+}
+
+func printNode(node *i3.Node) {
+	if len(node.Nodes) == 0 {
+
+		if node.Type == "con" && node.Name != "" {
+			fmt.Printf("--- %s \n", node.Name)
+		}
+
+	} else {
+		for _, n := range node.Nodes {
+			if node.Type == "workspace" {
+				fmt.Println()
+				fmt.Printf("%s:  %s \n", "Workspace", node.Name)
+			}
+			if node.Type == "output" {
+				fmt.Println()
+				fmt.Printf("%s:  %s \n", "Screen", node.Name)
+			}
+			printNode(n)
+		}
+	}
+}
+
 func main() {
-	collect()
+	printI3Tree()
 }
