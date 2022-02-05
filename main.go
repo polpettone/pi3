@@ -7,6 +7,11 @@ import (
 	"go.i3wm.org/i3/v4"
 )
 
+const TERMINAL_ICON = ""
+const MONITOR_ICON = ""
+const GOPHER_ICON = ""
+const WORKSPACE_ICON = ""
+
 func printOverview() {
 
 	tree, err := i3.GetTree()
@@ -21,22 +26,32 @@ func printOverview() {
 
 		if output.Name != "__i3" {
 
-			fmt.Printf("%s \n", output.Name)
+			fmt.Printf("%s %s \n", MONITOR_ICON, output.Name)
 
 			workspaces := []*i3.Node{}
 			workspaces = allNodesOfType("workspace", output, workspaces)
 
 			for _, workspace := range workspaces {
-				fmt.Printf("  - %s \n", workspace.Name)
+				fmt.Printf("  %s %s \n", WORKSPACE_ICON, workspace.Name)
 
 				contents := []*i3.Node{}
 				contents = allContentNodes(workspace, contents)
 
 				for _, content := range contents {
-					fmt.Printf("    - %s %s \n", content.Name, content.WindowProperties.Instance)
+					fmt.Printf("    %s %-30s \n",
+						TERMINAL_ICON,
+						truncateString(content.WindowProperties.Title, 30))
 				}
 			}
 		}
+	}
+}
+
+func truncateString(value string, max int) string {
+	if len(value) > max {
+		return value[:max]
+	} else {
+		return value
 	}
 }
 
