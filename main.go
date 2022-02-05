@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/bclicn/color"
 	"go.i3wm.org/i3/v4"
 )
 
@@ -32,14 +33,21 @@ func printOverview() {
 			workspaces = allNodesOfType("workspace", output, workspaces)
 
 			for _, workspace := range workspaces {
-				fmt.Printf("  %s %s \n", WORKSPACE_ICON, workspace.Name)
+				icon := color.Green(WORKSPACE_ICON)
+				fmt.Printf("  %s %s \n", icon, workspace.Name)
 
 				contents := []*i3.Node{}
 				contents = allContentNodes(workspace, contents)
 
 				for _, content := range contents {
+
+					icon := TERMINAL_ICON
+					if content.Focused {
+						icon = color.Red(TERMINAL_ICON)
+					}
+
 					fmt.Printf("    %s %-30s \n",
-						TERMINAL_ICON,
+						icon,
 						truncateString(content.WindowProperties.Title, 30))
 				}
 			}
