@@ -48,7 +48,7 @@ func printOverview() {
 
 					fmt.Printf("    %s %-30s \n",
 						icon,
-						truncateString(content.WindowProperties.Title, 30))
+						truncateString(content.WindowProperties.Title, 80))
 				}
 			}
 		}
