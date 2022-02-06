@@ -70,6 +70,10 @@ func allContentNodes(node *i3.Node, nodes []*i3.Node) []*i3.Node {
 		for _, n := range node.Nodes {
 			nodes = allContentNodes(n, nodes)
 		}
+
+		for _, n := range node.FloatingNodes {
+			nodes = allContentNodes(n, nodes)
+		}
 	}
 	return nodes
 }
