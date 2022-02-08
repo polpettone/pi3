@@ -42,7 +42,7 @@ func printOverview() {
 						icon = color.Red(TERMINAL_ICON)
 					}
 
-					fmt.Printf("    %s %-30s -- %s\n",
+					fmt.Printf("    %s %-18s %s\n",
 						icon,
 						content.WindowProperties.Instance,
 						truncateString(content.WindowProperties.Title, 80),
