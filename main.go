@@ -8,11 +8,6 @@ import (
 	"go.i3wm.org/i3/v4"
 )
 
-const TERMINAL_ICON = ""
-const MONITOR_ICON = ""
-const GOPHER_ICON = ""
-const WORKSPACE_ICON = ""
-
 func printOverview() {
 
 	tree, err := i3.GetTree()
@@ -41,18 +36,53 @@ func printOverview() {
 
 				for _, content := range contents {
 
-					icon := TERMINAL_ICON
+					icon := iconFor(content.WindowProperties.Instance)
+
 					if content.Focused {
 						icon = color.Red(TERMINAL_ICON)
 					}
 
-					fmt.Printf("    %s %-30s \n",
+					fmt.Printf("    %s %-30s -- %s\n",
 						icon,
-						truncateString(content.WindowProperties.Title, 80))
+						content.WindowProperties.Instance,
+						truncateString(content.WindowProperties.Title, 80),
+					)
 				}
 			}
 		}
 	}
+}
+
+const TERMINAL_ICON = ""
+const MONITOR_ICON = ""
+const GOPHER_ICON = ""
+const WORKSPACE_ICON = ""
+const BROWSER_ICON = ""
+const ZOOM_ICON = ""
+const IDE_ICON = "拓"
+const NYXT_ICON = ""
+const DEFAULT_ICON = ""
+const SLACK_ICON = ""
+
+func iconFor(class string) string {
+
+	iconMap := map[string]string{
+		"terminator":     TERMINAL_ICON,
+		"zoom":           ZOOM_ICON,
+		"jetbrains-idea": IDE_ICON,
+		"Navigator":      BROWSER_ICON,
+		"nyxt":           NYXT_ICON,
+		"slack":          SLACK_ICON,
+	}
+
+	icon, exist := iconMap[class]
+
+	if exist {
+		return icon
+	} else {
+		return DEFAULT_ICON
+	}
+
 }
 
 func truncateString(value string, max int) string {
