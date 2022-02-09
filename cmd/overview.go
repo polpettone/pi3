@@ -9,16 +9,25 @@ func OverviewCmd() *cobra.Command {
 		Use: "overview",
 
 		Run: func(command *cobra.Command, args []string) {
-			handleOverviewCommand(args)
+			handleOverviewCommand(command, args)
 		},
 	}
 }
 
-func handleOverviewCommand(args []string) {
-	printOverview()
+func handleOverviewCommand(command *cobra.Command, args []string) {
+	showInstanceNames, _ := command.Flags().GetBool("showInstanceNames")
+	printOverview(showInstanceNames)
 }
 
 func init() {
 	overviewCommand := OverviewCmd()
+
+	overviewCommand.Flags().BoolP(
+		"showInstanceNames",
+		"s",
+		false,
+		"",
+	)
+
 	rootCmd.AddCommand(overviewCommand)
 }

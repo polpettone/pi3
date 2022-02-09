@@ -8,7 +8,7 @@ import (
 	"go.i3wm.org/i3/v4"
 )
 
-func printOverview() {
+func printOverview(showInstanceNames bool) {
 
 	tree, err := i3.GetTree()
 	if err != nil {
@@ -42,11 +42,18 @@ func printOverview() {
 						icon = color.Red(TERMINAL_ICON)
 					}
 
-					fmt.Printf("    %s %-18s %s\n",
-						icon,
-						content.WindowProperties.Instance,
-						truncateString(content.WindowProperties.Title, 80),
-					)
+					if showInstanceNames {
+						fmt.Printf("    %s %-18s %s\n",
+							icon,
+							content.WindowProperties.Instance,
+							truncateString(content.WindowProperties.Title, 80),
+						)
+					} else {
+						fmt.Printf("    %s %s\n",
+							icon,
+							truncateString(content.WindowProperties.Title, 80),
+						)
+					}
 				}
 			}
 		}
@@ -117,8 +124,4 @@ func allNodesOfType(nodeType string, node *i3.Node, nodes []*i3.Node) []*i3.Node
 		nodes = append(nodes, node)
 	}
 	return nodes
-}
-
-func main() {
-	printOverview()
 }
