@@ -8,7 +8,12 @@ import (
 	"go.i3wm.org/i3/v4"
 )
 
-func printOverview(showInstanceNames bool) {
+func PrintOverview(showInstanceNames bool) {
+
+	focusedWorkspaceName, err := getFocusedWorkspaceName()
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	tree, err := i3.GetTree()
 	if err != nil {
@@ -28,7 +33,12 @@ func printOverview(showInstanceNames bool) {
 			workspaces = allNodesOfType("workspace", output, workspaces)
 
 			for _, workspace := range workspaces {
-				icon := color.Green(WORKSPACE_ICON)
+
+				icon := WORKSPACE_ICON
+				if workspace.Name == focusedWorkspaceName {
+					icon = color.Green(WORKSPACE_ICON)
+				}
+
 				fmt.Printf("  %s %s \n", icon, workspace.Name)
 
 				contents := []*i3.Node{}
@@ -89,7 +99,20 @@ func iconFor(class string) string {
 	} else {
 		return DEFAULT_ICON
 	}
+}
 
+func getFocusedWorkspaceName() (string, error) {
+	ws, err := i3.GetWorkspaces()
+	if err != nil {
+		return "", err
+	}
+	focusedWorkspaceName := "1"
+	for _, w := range ws {
+		if w.Focused {
+			focusedWorkspaceName = w.Name
+		}
+	}
+	return focusedWorkspaceName, err
 }
 
 func truncateString(value string, max int) string {

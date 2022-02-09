@@ -16,7 +16,7 @@ func OverviewCmd() *cobra.Command {
 
 func handleOverviewCommand(command *cobra.Command, args []string) {
 	showInstanceNames, _ := command.Flags().GetBool("showInstanceNames")
-	printOverview(showInstanceNames)
+	PrintOverview(showInstanceNames)
 }
 
 func init() {
