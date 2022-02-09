@@ -47,21 +47,24 @@ func PrintOverview(showInstanceNames bool) {
 				for _, content := range contents {
 
 					icon := iconFor(content.WindowProperties.Instance)
+					title := truncateString(content.WindowProperties.Title, 80)
 
 					if content.Focused {
-						icon = color.Red(TERMINAL_ICON)
+						icon = color.Red(icon)
+						title = color.LightBlue(title)
 					}
 
 					if showInstanceNames {
-						fmt.Printf("    %s %-18s %s\n",
+						fmt.Printf("    %s %d %-18s %s\n",
 							icon,
+							content.ID,
 							content.WindowProperties.Instance,
-							truncateString(content.WindowProperties.Title, 80),
+							title,
 						)
 					} else {
 						fmt.Printf("    %s %s\n",
 							icon,
-							truncateString(content.WindowProperties.Title, 80),
+							title,
 						)
 					}
 				}
