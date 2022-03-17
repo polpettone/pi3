@@ -10,7 +10,7 @@ import (
 
 func PrintOverview(showInstanceNames bool) {
 
-	focusedWorkspaceName, err := getFocusedWorkspaceName()
+	focusedWorkspace, err := getFocusedWorkspace()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -35,7 +35,7 @@ func PrintOverview(showInstanceNames bool) {
 			for _, workspace := range workspaces {
 
 				icon := WORKSPACE_ICON
-				if workspace.Name == focusedWorkspaceName {
+				if workspace.Name == focusedWorkspace.Name {
 					icon = color.Green(WORKSPACE_ICON)
 				}
 
@@ -104,18 +104,18 @@ func iconFor(class string) string {
 	}
 }
 
-func getFocusedWorkspaceName() (string, error) {
+func getFocusedWorkspace() (*i3.Workspace, error) {
 	ws, err := i3.GetWorkspaces()
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	focusedWorkspaceName := "1"
+	focusedWorkspace := ws[0]
 	for _, w := range ws {
 		if w.Focused {
-			focusedWorkspaceName = w.Name
+			focusedWorkspace = w
 		}
 	}
-	return focusedWorkspaceName, err
+	return &focusedWorkspace, err
 }
 
 func truncateString(value string, max int) string {
