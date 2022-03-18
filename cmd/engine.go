@@ -8,6 +8,47 @@ import (
 	"go.i3wm.org/i3/v4"
 )
 
+func GetFocusedContainer() *i3.Node {
+
+	tree, err := i3.GetTree()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	outputs := []*i3.Node{}
+	outputs = allNodesOfType("output", tree.Root, outputs)
+	for _, output := range outputs {
+
+		if output.Name != "__i3" {
+			workspaces := []*i3.Node{}
+			workspaces = allNodesOfType("workspace", output, workspaces)
+
+			for _, workspace := range workspaces {
+
+				contents := []*i3.Node{}
+				contents = allContentNodes(workspace, contents)
+
+				for _, content := range contents {
+					if content.Focused {
+						return content
+					}
+				}
+			}
+		}
+	}
+
+	return nil
+}
+
+func OpenTerminal() error {
+	result, err := i3.RunCommand("exec terminator")
+	fmt.Printf("%v", result)
+	if err != nil {
+		return nil
+	}
+	return err
+}
+
 func PrintOverview(showInstanceNames bool) {
 
 	focusedWorkspace, err := getFocusedWorkspace()
